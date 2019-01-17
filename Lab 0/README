@@ -1,0 +1,60 @@
+NAME:   ALISSA NIEWIADOMSKI
+EMAIL:  aniewiadomski@ucla.edu
+UID:    *********
+
+The objective of Lab 0 is to write a simple C program that parses command
+line arguments, ultimately allowing to copy input to specified output.
+In addition, a Makefile and images with stack traces and breakpoint inspections
+from gdb sessions are included.
+
+////////////////////
+// INCLUDED FILES //
+////////////////////
+  => lab0.c
+      The source C code
+  => Makefile
+      A Makefile that builds, cleans, and tests Lab 0
+  => backtrace.png
+      An image from a gdb session showing a stack trace from a segfault from lab0.c
+  => breakpoint.png
+      An image from a gdb session showing a breakpoint, inspecting a variable when debugging lab0.c
+  => README
+      This file with documentation and information
+  => input.txt
+      A test input file that can be used to test lab0.c
+  => testScripts.s
+      A shell script that runs tests on lab0.c, called by running "make check".
+
+////////////////////////////
+// DOCUMENTATION OF TESTS //
+////////////////////////////
+1) Test that lab0.c should exit successfully with input and output arguments.
+    => Lab 0 should run successfully if it copies input to ouput.
+    => PASSED
+2) Test that the input file is correctly copied to the output file.
+    => Lab 0 should copy the contents of the input file exactly to the ouput.
+    => Compares the input to output and checks for any differences
+    => PASSED
+3) Test that bogus arguments to the program exit with code 1.
+    => PASSED
+4) Test that invalid arguments to the input file exit with code 2.
+    => If a file that doesn't exist is passed into input, it should exit with code 2.
+    => PASSED
+5) Test that --catch --segfault correctly handles the segfault and exits with code 4.
+    => If --catch is passed before --segfault, then it should call signal() and exit with code 4.
+    => PASSED
+6) Test that --catch --dump-core --segfault cancels out the segfault.
+    => --dump-core should undo the --catch flag.
+    => PASSED
+
+
+///////////////
+// RESOURCES //
+///////////////
+=> I originally had a lot of trouble writing out the command to remove all generated
+   text files except input.txt. I used https://unix.stackexchange.com/questions/310974/delete-files-of-particular-extension-except-one-in-linux to help me write a
+   command using find and exec to remove all other text files.
+
+=> I did a lot of reading on the provided "File Descriptor Management": https://web.cs.ucla.edu/classes/winter19/cs111/labs/fd_juggling.html
+
+=> I wasn't sure how to provide arguments in gdb, and found that you could run 'set args' to provide them: https://ftp.gnu.org/old-gnu/Manuals/gdb/html_node/gdb_18.html

@@ -1,0 +1,1 @@
+hi this should be copied exactly to output or stdout
