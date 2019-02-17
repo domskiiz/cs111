@@ -1,7 +1,7 @@
 NAME: Alissa Niewiadomski
 EMAIL: aniewiadomski@ucla.edu
 ID: *********
-SLIPDAYS: 6
+SLIPDAYS: ---
 
 FILES:
 => lab2_add.c: Tests locks and yields on a shared variable add function.
