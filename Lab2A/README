@@ -1,0 +1,82 @@
+NAME: Alissa Niewiadomski
+EMAIL: aniewiadomski@ucla.edu
+ID: *********
+SLIPDAYS: 6
+
+FILES:
+=> lab2_add.c: Tests locks and yields on a shared variable add function.
+=> lab2_list.c: Tests locks and yields on an implementation of a sorted linked list.
+=> SortedList.h, SortedList.c: Implementation for our sorted doubly linked list.
+=> Makefile: builds, graphs, tests, and bundles files
+=> lab2_add.csv: A CSV file of all output generated from tests for lab2_add.
+=> lab2_list.csv: A CSV file of all output generated from tests for lab2_list.
+=> *.png: Graphs extrapolated from the CSV files.
+=> test.sh: Every test case run for both lab2_add and lab2_list.
+=> README: This file
+
+=============
+
+2.1.1 - Causing Conflicts:
+Why does it take many iterations before errors are seen?
+Why does a significantly smaller number of iterations so seldom fail?
+
+=> When we increase the number of iterations, there is a higher chance that the race conditions will
+lead to errors in the counter. The add function has a low latency and thus with a few iterations, there
+is a less likely chance that two threads will be modifying the counter at the same time. When you increase
+the number of iterations, there is a much higher probability that these race conditions will cause errors.
+
+
+2.1.2 - Cost of Yielding:
+Why are the --yield runs so much slower?
+Where is the additional time going?
+Is it possible to get valid per-operation timings if we are using the --yield option?
+If so, explain how. If not, explain why not.
+
+=> The yield runs are slower because there is an additional overhead cost with context switching. Because
+the sched_yield() call causes our scheduler to yield the current thread to another thread, the CPU
+must spend time switching threads. With the yield option, it is likely not possible to get
+accurate per-operation timing because there is no way to accurately time the amount of time it
+takes to perform context switching.
+
+
+2.1.3 - Measurement Errors:
+Why does the average cost per operation drop with increasing iterations?
+If the cost per iteration is a function of the number of iterations, how do we
+know how many iterations to run (or what the "correct" cost is)?
+
+=> pthread_create() is not an expensive operation (1), so as more and more threads are created there is not a
+terrible latency that is associated with creating more threads. As a result, as more threads are added,
+the ratio of creating a thread latency to actual computational overhead is lessened--there is more
+time spent on actually performing the add function rather than creating threads. As a result,
+we should be running more iterations to get a more accurate picture of the "correct" per operation
+cost is. Latency to create threads is not as much of a skew in the data.
+
+
+2.1.4 - Costs of Serialization:
+Why do all of the options perform similarly for low numbers of threads?
+Why do the three protected operations slow down as the number of threads rises?
+
+=> When there aren't that many threads, there isn't a lot of latency to wait for locks to be released.
+However, as the number of threads increase, each thread has to wait for the other n-1 threads to unlock--as a result, there is a lot more overhead associated with increasing threads.
+
+2.2.1 - Scalability of Mutex
+Compare the variation in time per mutex-protected operation vs the number of threads in Part-1 (adds) and Part-2 (sorted lists).
+Comment on the general shapes of the curves, and explain why they have this shape.
+Comment on the relative rates of increase and differences in the shapes of the curves, and offer an explanation for these differences.
+
+=> For the add program, adding more threads caused the cost of the mutex-protected operation to increase.
+However, for the linked list program, increasing the number of threads did not correlate to a worse performance. (Constant, flat graph vs a relatively linear, increasing graph)
+There is much less overhead with linked lists because each lock is held for a pretty long period of time, relative to the adding locks. As a result, increasing the number of threads doesn't affect
+the amount of time the thread is locked.
+
+
+2.2.2 - Scalability of spin locks
+Compare the variation in time per protected operation vs the number of threads for list operations protected by Mutex vs Spin locks. Comment on the general shapes of the curves, and explain why they have this shape.
+Comment on the relative rates of increase and differences in the shapes of the curves, and offer an explanation for these differences.
+
+=> The spin locks don't scale well in the list implementation. With the mutex locks, the CPU doesn't waste resources spinning--thus, we do see an increase in overhead with the spin locks even in the linked list program.
+
+
+RESOURCES
+(1): Overhead of creating a thread:
+https://stackoverflow.com/questions/3929774/how-much-overhead-is-there-when-creating-a-thread
